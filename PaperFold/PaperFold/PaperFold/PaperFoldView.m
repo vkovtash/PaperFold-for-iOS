@@ -107,6 +107,14 @@
     [self.rightFoldView setFrame:rightFoldViewFrame];
 }
 
+- (void) setUseOptimizedScreenshot:(BOOL)useOptimizedScreenshot{
+    _useOptimizedScreenshot = useOptimizedScreenshot;
+    self.topFoldView.useOptimizedScreenshot = _useOptimizedScreenshot;
+    self.leftFoldView.useOptimizedScreenshot = _useOptimizedScreenshot;
+    self.rightFoldView.useOptimizedScreenshot = _useOptimizedScreenshot;
+    self.bottomFoldView.useOptimizedScreenshot = _useOptimizedScreenshot;
+}
+
 - (void)setCenterContentView:(UIView*)view
 {
 	[view setAutoresizingMask:UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth];
