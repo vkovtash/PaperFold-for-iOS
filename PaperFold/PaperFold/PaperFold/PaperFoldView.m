@@ -167,6 +167,7 @@
 
 - (void)setRightFoldContentView:(UIView*)view foldCount:(int)rightViewFoldCount pullFactor:(float)rightViewPullFactor
 {
+    if (self.rightFoldView) [self.rightFoldView removeFromSuperview];
     self.rightFoldView = [[MultiFoldView alloc] initWithFrame:CGRectMake(self.frame.size.width,0,view.frame.size.width,self.frame.size.height) foldDirection:FoldDirectionHorizontalRightToLeft folds:rightViewFoldCount pullFactor:rightViewPullFactor];
     [self.rightFoldView setDelegate:self];
     [self.rightFoldView setUseOptimizedScreenshot:self.useOptimizedScreenshot];
@@ -195,6 +196,7 @@
 
 - (void)setTopFoldContentView:(UIView*)view topViewFoldCount:(int)topViewFoldCount topViewPullFactor:(float)topViewPullFactor
 {
+    if (self.topFoldView) [self.topFoldView removeFromSuperview];
     self.topFoldView = [[MultiFoldView alloc] initWithFrame:CGRectMake(0,-1*view.frame.size.height,view.frame.size.width,view.frame.size.height) foldDirection:FoldDirectionVertical folds:topViewFoldCount pullFactor:topViewPullFactor];
     [self.topFoldView setDelegate:self];
     [self.topFoldView setUseOptimizedScreenshot:self.useOptimizedScreenshot];
@@ -352,8 +354,6 @@
         
         //[self setPaperFoldState:PaperFoldStateDefault];
         self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(restoreView:) userInfo:nil repeats:YES];
-        
-
     }
 }
 
@@ -690,10 +690,10 @@
             [self.contentView setTransform:transform];
             [self animateWithContentOffset:CGPointMake(0, 0) panned:NO];
             
+            self.state = PaperFoldStateDefault;
 			if (self.lastState != PaperFoldStateDefault) {
 				[self finishForState:PaperFoldStateDefault];
 			}
-			self.state = PaperFoldStateDefault;
         }
         else
         {
@@ -717,11 +717,10 @@
             [self.contentView setTransform:transform];
             [self animateWithContentOffset:CGPointMake(0, 0) panned:NO];
             
+            self.state = PaperFoldStateDefault;
 			if (self.lastState != PaperFoldStateDefault) {
 				[self finishForState:PaperFoldStateDefault];
 			}
-			self.state = PaperFoldStateDefault;
-            
         }
         else
         {
@@ -743,15 +742,13 @@
         [self.bottomFoldView setHidden:YES];
         [self.leftFoldView setHidden:YES];
         [self.rightFoldView setHidden:YES];
+        self.lastState = self.state;
+        self.state = state;
         
         if (state==PaperFoldStateDefault)
         {
             CGAffineTransform transform = transform = CGAffineTransformMakeTranslation(0, 0);
             [self.contentView setTransform:transform];
-            
-			if (self.lastState != PaperFoldStateDefault) {
-				[self finishForState:PaperFoldStateDefault];
-			}
         }
         else if (state==PaperFoldStateLeftUnfolded)
         {
@@ -760,10 +757,6 @@
             CGAffineTransform transform = CGAffineTransformMakeTranslation(self.leftFoldView.frame.size.width, 0);
             [self.contentView setTransform:transform];
             [self.leftFoldView unfoldWithoutAnimation];
-            
-			if (self.lastState != PaperFoldStateLeftUnfolded) {
-				[self finishForState:PaperFoldStateLeftUnfolded];
-			}
         }
         else if (state==PaperFoldStateRightUnfolded)
         {
@@ -772,12 +765,30 @@
             CGAffineTransform transform = CGAffineTransformMakeTranslation(-self.rightFoldView.frame.size.width, 0);
             [self.contentView setTransform:transform];
             [self.rightFoldView unfoldWithoutAnimation];
-            
-			if (self.lastState != PaperFoldStateRightUnfolded) {
-				[self finishForState:PaperFoldStateRightUnfolded];
-			}
         }
-        self.state = state;
+        else if (state==PaperFoldStateTopUnfolded){
+            [self.topFoldView setHidden:NO];
+            
+            CGAffineTransform transform = CGAffineTransformMakeTranslation(0, self.topFoldView.frame.size.height);
+            [self.contentView setTransform:transform];
+            [self.topFoldView unfoldWithoutAnimation];
+        }
+        else if (state==PaperFoldStateBottomUnfolded){
+            [self.bottomFoldView setHidden:NO];
+            
+            CGAffineTransform transform = CGAffineTransformMakeTranslation(0, -self.bottomFoldView.frame.size.height);
+            [self.contentView setTransform:transform];
+            [self.bottomFoldView unfoldWithParentOffset:self.contentView.frame.origin.y];
+        }
+        
+        if ([self.delegate respondsToSelector:@selector(paperFoldView:viewDidOffset:)])
+        {
+            [self.delegate paperFoldView:self viewDidOffset:self.contentView.frame.origin];
+        }
+        
+        if (self.lastState != state) {
+            [self finishForState:state];
+        }
     }
 }
 

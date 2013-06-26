@@ -471,8 +471,17 @@
 
 - (void)unfoldWithoutAnimation
 {
-    [self unfoldWithParentOffset:self.frame.size.width];
-    [self foldDidOpened];
+    if (_state==FoldStateClosed)
+    {
+        _state = FoldStateTransition;
+        [self foldWillOpen];
+        if (self.foldDirection == FoldDirectionVertical) {
+            [self unfoldWithParentOffset:self.frame.size.height];
+        }
+        else{
+            [self unfoldWithParentOffset:self.frame.size.width];
+        }
+    }
 }
 
 #pragma mark states

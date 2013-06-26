@@ -50,7 +50,7 @@
         [_paperFoldView setRightFoldContentView:_mapView foldCount:3 pullFactor:0.9];
         
         _centerTableView = [[UITableView alloc] initWithFrame:CGRectMake(0,0,[self.view bounds].size.width,[self.view bounds].size.height)];
-        [_centerTableView setRowHeight:120];
+        [_centerTableView setRowHeight:44];
         [_paperFoldView setCenterContentView:_centerTableView];
         [_centerTableView setDelegate:self];
         [_centerTableView setDataSource:self];
@@ -79,12 +79,12 @@
         // disable right fold
         //[_paperFoldView setEnableRightFoldDragging:NO];
         
-        _topView = [[UIView alloc] initWithFrame:CGRectMake(0,0,[self.view bounds].size.width,300)];
+        _topView = [[UIView alloc] initWithFrame:CGRectMake(0,0,[self.view bounds].size.width,200)];
         [_topView setBackgroundColor:[UIColor whiteColor]];
         UILabel *topLabel = [[UILabel alloc] initWithFrame:_topView.frame];
         [topLabel setText:@"A"];
         [topLabel setBackgroundColor:[UIColor clearColor]];
-        [topLabel setFont:[UIFont boldSystemFontOfSize:300]];
+        [topLabel setFont:[UIFont boldSystemFontOfSize:200]];
         [topLabel setTextAlignment:UITextAlignmentCenter];
         [_topView addSubview:topLabel];
         
@@ -124,7 +124,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableView==self.leftTableView) return 10;
-    else return 3;
+    else return 8;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -144,6 +144,11 @@
         if (indexPath.row==0) [cell.textLabel setText:@"<-- unfold left view"];
         else if (indexPath.row==1)[cell.textLabel setText:@"unfold right view -->"];
         else if (indexPath.row==2)[cell.textLabel setText:@"--> restore <--"];
+        else if (indexPath.row==3)[cell.textLabel setText:@"top non animated"];
+        else if (indexPath.row==4)[cell.textLabel setText:@"bottom non animated"];
+        else if (indexPath.row==5)[cell.textLabel setText:@"reset non animated"];
+        else if (indexPath.row==6)[cell.textLabel setText:@"left non animated"];
+        else if (indexPath.row==7)[cell.textLabel setText:@"right non animated"];
     }
     
     return cell;
@@ -168,6 +173,31 @@
         {
             // restore to center
             [self.paperFoldView setPaperFoldState:PaperFoldStateDefault];
+        }
+        else if (indexPath.row==3)
+        {
+            // unfold top view without animation
+            [self.paperFoldView setPaperFoldState:PaperFoldStateTopUnfolded animated:NO];
+        }
+        else if (indexPath.row==4)
+        {
+            // unfold bottom view without animation
+            [self.paperFoldView setPaperFoldState:PaperFoldStateBottomUnfolded animated:NO];
+        }
+        else if (indexPath.row==5)
+        {
+            // unfold bottom view without animation
+            [self.paperFoldView setPaperFoldState:PaperFoldStateDefault animated:NO];
+        }
+        else if (indexPath.row==6)
+        {
+            // unfold left view without animation
+            [self.paperFoldView setPaperFoldState:PaperFoldStateLeftUnfolded animated:NO];
+        }
+        else if (indexPath.row==7)
+        {
+            // unfold right view without animation
+            [self.paperFoldView setPaperFoldState:PaperFoldStateRightUnfolded animated:NO];
         }
     }
     
