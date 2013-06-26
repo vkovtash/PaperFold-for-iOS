@@ -167,6 +167,7 @@
 
 - (void)setRightFoldContentView:(UIView*)view foldCount:(int)rightViewFoldCount pullFactor:(float)rightViewPullFactor
 {
+    if (self.rightFoldView) [self.rightFoldView removeFromSuperview];
     self.rightFoldView = [[MultiFoldView alloc] initWithFrame:CGRectMake(self.frame.size.width,0,view.frame.size.width,self.frame.size.height) foldDirection:FoldDirectionHorizontalRightToLeft folds:rightViewFoldCount pullFactor:rightViewPullFactor];
     [self.rightFoldView setDelegate:self];
     [self.rightFoldView setUseOptimizedScreenshot:self.useOptimizedScreenshot];
@@ -195,6 +196,7 @@
 
 - (void)setTopFoldContentView:(UIView*)view topViewFoldCount:(int)topViewFoldCount topViewPullFactor:(float)topViewPullFactor
 {
+    if (self.topFoldView) [self.topFoldView removeFromSuperview];
     self.topFoldView = [[MultiFoldView alloc] initWithFrame:CGRectMake(0,-1*view.frame.size.height,view.frame.size.width,view.frame.size.height) foldDirection:FoldDirectionVertical folds:topViewFoldCount pullFactor:topViewPullFactor];
     [self.topFoldView setDelegate:self];
     [self.topFoldView setUseOptimizedScreenshot:self.useOptimizedScreenshot];
@@ -718,7 +720,6 @@
             [self animateWithContentOffset:CGPointMake(0, 0) panned:NO];
             
             self.state = PaperFoldStateDefault;
-            NSLog(@"PreState");
 			if (self.lastState != PaperFoldStateDefault) {
 				[self finishForState:PaperFoldStateDefault];
 			}
@@ -773,6 +774,13 @@
             CGAffineTransform transform = CGAffineTransformMakeTranslation(0, self.topFoldView.frame.size.height);
             [self.contentView setTransform:transform];
             [self.topFoldView unfoldWithoutAnimation];
+        }
+        else if (state==PaperFoldStateBottomUnfolded){
+            [self.bottomFoldView setHidden:NO];
+            
+            CGAffineTransform transform = CGAffineTransformMakeTranslation(0, -self.bottomFoldView.frame.size.height);
+            [self.contentView setTransform:transform];
+            [self.bottomFoldView unfoldWithParentOffset:self.contentView.frame.origin.y];
         }
         
         if ([self.delegate respondsToSelector:@selector(paperFoldView:viewDidOffset:)])
