@@ -470,13 +470,15 @@
 }
 
 - (void)unfoldWithoutAnimation
-{    
+{
+    [self foldWillOpen];
     if (self.foldDirection == FoldDirectionVertical) {
         [self unfoldWithParentOffset:self.frame.size.height];
     }
     else{
         [self unfoldWithParentOffset:self.frame.size.width];
     }
+    _state = FoldStateOpened;
     [self foldDidOpened];
 }
 

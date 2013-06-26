@@ -773,11 +773,11 @@
             CGAffineTransform transform = CGAffineTransformMakeTranslation(0, self.topFoldView.frame.size.height);
             [self.contentView setTransform:transform];
             [self.topFoldView unfoldWithoutAnimation];
-            [self.topFoldView unfoldWithParentOffset:self.contentView.frame.origin.y];
-            if ([self.delegate respondsToSelector:@selector(paperFoldView:viewDidOffset:)])
-            {
-                [self.delegate paperFoldView:self viewDidOffset:CGPointMake(0,self.contentView.frame.origin.y)];
-            }
+        }
+        
+        if ([self.delegate respondsToSelector:@selector(paperFoldView:viewDidOffset:)])
+        {
+            [self.delegate paperFoldView:self viewDidOffset:self.contentView.frame.origin];
         }
         
         if (self.lastState != state) {
