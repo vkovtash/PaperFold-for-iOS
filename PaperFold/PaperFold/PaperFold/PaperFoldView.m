@@ -222,6 +222,8 @@
 
     BOOL isVoiceOverRunning = UIAccessibilityIsVoiceOverRunning();
     
+    NSLog(@"Cur state %d",self.state);
+    
     if ([gesture state]==UIGestureRecognizerStateBegan)
     {
 		// show the divider while dragging
@@ -352,8 +354,6 @@
         
         //[self setPaperFoldState:PaperFoldStateDefault];
         self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(restoreView:) userInfo:nil repeats:YES];
-        
-
     }
 }
 
@@ -690,10 +690,10 @@
             [self.contentView setTransform:transform];
             [self animateWithContentOffset:CGPointMake(0, 0) panned:NO];
             
+            self.state = PaperFoldStateDefault;
 			if (self.lastState != PaperFoldStateDefault) {
 				[self finishForState:PaperFoldStateDefault];
 			}
-			self.state = PaperFoldStateDefault;
         }
         else
         {
@@ -717,11 +717,11 @@
             [self.contentView setTransform:transform];
             [self animateWithContentOffset:CGPointMake(0, 0) panned:NO];
             
+            self.state = PaperFoldStateDefault;
+            NSLog(@"PreState");
 			if (self.lastState != PaperFoldStateDefault) {
 				[self finishForState:PaperFoldStateDefault];
 			}
-			self.state = PaperFoldStateDefault;
-            
         }
         else
         {
@@ -743,6 +743,8 @@
         [self.bottomFoldView setHidden:YES];
         [self.leftFoldView setHidden:YES];
         [self.rightFoldView setHidden:YES];
+        self.lastState = self.state;
+        self.state = state;
         
         if (state==PaperFoldStateDefault)
         {
@@ -777,7 +779,16 @@
 				[self finishForState:PaperFoldStateRightUnfolded];
 			}
         }
-        self.state = state;
+        else if (state==PaperFoldStateTopUnfolded){
+            [self.topFoldView setHidden:NO];
+            
+            CGAffineTransform transform = CGAffineTransformMakeTranslation(0, self.topFoldView.frame.size.height);
+            [self.contentView setTransform:transform];
+            [self.topFoldView unfoldWithoutAnimation];
+			if (self.lastState != PaperFoldStateTopUnfolded) {
+				[self finishForState:PaperFoldStateTopUnfolded];
+			}
+        }
     }
 }
 
