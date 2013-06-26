@@ -71,6 +71,8 @@ typedef void (^CompletionBlock)();
 @property (nonatomic, assign) BOOL enableHorizontalEdgeDragging;
 // indicate if the fold was triggered by finger panning, or set state
 @property (nonatomic, assign) BOOL isAutomatedFolding;
+// using the same threshold value for folding as for unfolfing
+@property (nonatomic, assign) BOOL foldingThresholdEnabled;
 @property (nonatomic, assign) id<PaperFoldViewDelegate> delegate;
 // the initial panning direction
 @property (nonatomic, assign) PaperFoldInitialPanDirection paperFoldInitialPanDirection;

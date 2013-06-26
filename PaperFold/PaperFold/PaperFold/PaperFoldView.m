@@ -349,11 +349,33 @@
             }
         }
         
+        if (_foldingThresholdEnabled) {
+            if (_state == PaperFoldStateTopUnfolded) {
+                if (-y>=kTopViewUnfoldThreshold*self.topFoldView.frame.size.height) {
+                    self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(restoreView:) userInfo:nil repeats:YES];
+                }
+                else{
+                    self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(unfoldTopView:) userInfo:nil repeats:YES];
+                }
+                return;
+            }
+            else if (_state == PaperFoldStateBottomUnfolded){
+                if (y>=kBottomViewUnfoldThreshold*self.bottomFoldView.frame.size.height) {
+                    self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(restoreView:) userInfo:nil repeats:YES];
+                }
+                else{
+                    self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(unfoldBottomView:) userInfo:nil repeats:YES];
+                }
+                return;
+            }
+        }
+        
         // after panning completes
         // if offset does not exceed threshold
         // use NSTimer to create manual animation to restore view
         
         //[self setPaperFoldState:PaperFoldStateDefault];
+        
         self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(restoreView:) userInfo:nil repeats:YES];
     }
 }
@@ -409,6 +431,27 @@
                     self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(unfoldRightView:) userInfo:nil repeats:YES];
                     return;
                 }
+            }
+        }
+        
+        if (_foldingThresholdEnabled) {
+            if (_state == PaperFoldStateLeftUnfolded) {
+                if (-x>=kLeftViewUnfoldThreshold*self.leftFoldView.frame.size.width) {
+                    self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(restoreView:) userInfo:nil repeats:YES];
+                }
+                else{
+                    self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(unfoldLeftView:) userInfo:nil repeats:YES];
+                }
+                return;
+            }
+            else if (_state == PaperFoldStateRightUnfolded){
+                if (x>=kRightViewUnfoldThreshold*self.rightFoldView.frame.size.width) {
+                    self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(restoreView:) userInfo:nil repeats:YES];
+                }
+                else{
+                    self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(unfoldRightView:) userInfo:nil repeats:YES];
+                }
+                return;
             }
         }
         
