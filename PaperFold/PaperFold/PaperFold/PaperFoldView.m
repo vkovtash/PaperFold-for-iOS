@@ -750,10 +750,6 @@
         {
             CGAffineTransform transform = transform = CGAffineTransformMakeTranslation(0, 0);
             [self.contentView setTransform:transform];
-            
-			if (self.lastState != PaperFoldStateDefault) {
-				[self finishForState:PaperFoldStateDefault];
-			}
         }
         else if (state==PaperFoldStateLeftUnfolded)
         {
@@ -762,10 +758,6 @@
             CGAffineTransform transform = CGAffineTransformMakeTranslation(self.leftFoldView.frame.size.width, 0);
             [self.contentView setTransform:transform];
             [self.leftFoldView unfoldWithoutAnimation];
-            
-			if (self.lastState != PaperFoldStateLeftUnfolded) {
-				[self finishForState:PaperFoldStateLeftUnfolded];
-			}
         }
         else if (state==PaperFoldStateRightUnfolded)
         {
@@ -774,10 +766,6 @@
             CGAffineTransform transform = CGAffineTransformMakeTranslation(-self.rightFoldView.frame.size.width, 0);
             [self.contentView setTransform:transform];
             [self.rightFoldView unfoldWithoutAnimation];
-            
-			if (self.lastState != PaperFoldStateRightUnfolded) {
-				[self finishForState:PaperFoldStateRightUnfolded];
-			}
         }
         else if (state==PaperFoldStateTopUnfolded){
             [self.topFoldView setHidden:NO];
@@ -785,9 +773,15 @@
             CGAffineTransform transform = CGAffineTransformMakeTranslation(0, self.topFoldView.frame.size.height);
             [self.contentView setTransform:transform];
             [self.topFoldView unfoldWithoutAnimation];
-			if (self.lastState != PaperFoldStateTopUnfolded) {
-				[self finishForState:PaperFoldStateTopUnfolded];
-			}
+            [self.topFoldView unfoldWithParentOffset:self.contentView.frame.origin.y];
+            if ([self.delegate respondsToSelector:@selector(paperFoldView:viewDidOffset:)])
+            {
+                [self.delegate paperFoldView:self viewDidOffset:CGPointMake(0,self.contentView.frame.origin.y)];
+            }
+        }
+        
+        if (self.lastState != state) {
+            [self finishForState:state];
         }
     }
 }
