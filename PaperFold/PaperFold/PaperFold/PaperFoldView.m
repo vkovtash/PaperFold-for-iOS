@@ -268,21 +268,22 @@
         }
         else
         {
-            if (self.state==PaperFoldStateDefault)
-            {
-                self.paperFoldInitialPanDirection = PaperFoldInitialPanDirectionVertical;
-            }
+            self.paperFoldInitialPanDirection = PaperFoldInitialPanDirectionVertical;
         }
     }
     else if (!isVoiceOverRunning)
     {
         if (self.paperFoldInitialPanDirection==PaperFoldInitialPanDirectionHorizontal)
         {
-            [self onContentViewPannedHorizontally:gesture];
+            if (self.state != PaperFoldStateTopUnfolded && self.state != PaperFoldStateBottomUnfolded) {
+                [self onContentViewPannedHorizontally:gesture];
+            }
         }
         else
         {
-            [self onContentViewPannedVertically:gesture];
+            if (self.state != PaperFoldStateRightUnfolded && self.state != PaperFoldStateLeftUnfolded) {
+                [self onContentViewPannedVertically:gesture];
+            }
         }
 		
 		if (gesture.state != UIGestureRecognizerStateChanged) {
