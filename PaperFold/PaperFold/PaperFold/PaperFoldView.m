@@ -79,10 +79,10 @@
     [_contentView setBackgroundColor:[UIColor whiteColor]];
     [_contentView setAutoresizesSubviews:YES];
     
-    UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onContentViewPanned:)];
-	panGestureRecognizer.delegate = self;
-    [_contentView addGestureRecognizer:panGestureRecognizer];
-    [panGestureRecognizer setDelegate:self];
+    _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onContentViewPanned:)];
+	_panGestureRecognizer.delegate = self;
+    [_contentView addGestureRecognizer:_panGestureRecognizer];
+    [_panGestureRecognizer setDelegate:self];
     
     _state = PaperFoldStateDefault;
     _lastState = _state;
@@ -92,6 +92,14 @@
     _enableTopFoldDragging = NO;
 	_restrictedDraggingRect = CGRectNull;
 	_showDividerLines = NO;
+}
+
+- (BOOL) isDraggingEnabled{
+    return self.panGestureRecognizer.isEnabled;
+}
+
+- (void) setIsDraggingEnabled:(BOOL)isDraggingEnabled{
+    [self.panGestureRecognizer setEnabled:isDraggingEnabled];
 }
 
 - (void)setFrame:(CGRect)frame

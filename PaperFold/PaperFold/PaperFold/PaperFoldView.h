@@ -73,6 +73,8 @@ typedef void (^CompletionBlock)();
 @property (nonatomic, assign) BOOL isAutomatedFolding;
 // using the same threshold value for folding as for unfolfing
 @property (nonatomic, assign) BOOL foldingThresholdEnabled;
+// enable and disable gesture recognizer
+@property (nonatomic) BOOL isDraggingEnabled;
 @property (nonatomic, assign) id<PaperFoldViewDelegate> delegate;
 // the initial panning direction
 @property (nonatomic, assign) PaperFoldInitialPanDirection paperFoldInitialPanDirection;
